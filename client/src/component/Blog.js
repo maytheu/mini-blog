@@ -22,17 +22,14 @@ class Blog extends Component {
 	    <div className="post">
 	    <div className="title">
 	    <Router>
-	    <Link to="/title">Title</Link>
+	    <Link to="/detail">Title</Link>
 	    </Router>
 	    </div>
 	    <div className="content">
 	    latest news from arsenal fc
 	    </div>
 	    </div>
-	    
 	
-	    <Formfield type="text"  />
-	    <Formfield type="password" placeholder="password"/>
 	    </div>
 	    </div>
 	    </div>
