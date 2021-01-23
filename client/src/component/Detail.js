@@ -7,7 +7,11 @@ class Detail extends Component {
             <div className="main">
             <div className="flex-center flex-colum
 n">
-            Succeddfully login
+            <h3>Title</h3>
+	    <div > cibtent</div>
+	    <div>
+	    add edit abd delete fir user
+	    </div>
             </div>
             </div>
     )
