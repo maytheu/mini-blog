@@ -2,12 +2,12 @@ const mongoose = require("mongoose")
 const userAuth = require("../middleware/userAuth.js")                     
 const Blog = mongoose.model("blogs")                                                        
 module.exports = app =>{
-	app.post("/api/user/post", userAuth,  (req, res) =>{
+	app.get("/api/user/post", userAuth,  (req, res) =>{
 		const post = new Blog({
-			title :"Teet0", 
+			title :"Teet", 
 			headline: "A test damole ofbtye blog post",
 			blog:"Tue full hlogbpost will be loaded in thr bext oage",
-			publish: 0
+			publish: 1
 	})
 		post.save((err, doc) =>{
                         if (err) return res.json({ success: false, err });                              res.status(200).json({ success: true });                      })                                        })
@@ -21,25 +21,20 @@ module.exports = app =>{
 
 	//display only the published post
 	app.get("/api/view", (req, res) =>{     
-		Blog.find({}, (err, post) =>{   
-			if (err) return res.json({ success: false, err });                          
-			post.map(published => {
-				if(published.publish){
-					res.status(200).json({ success: true, published });
-				}
-			})
+		Blog.find({publish: true}, (err, post) =>{   
+			if (err) return res.status(400).send(err)          
+			res.status(200).send( post )
+			
 		})                               
 	})
 
 	app.get("/api/post", (req, res) =>{
 		let title = req.query.title
-		Blog.findOne({title}, (err, post) =>{
+		Blog.findOne({title, publish: true}, (err, post) =>{
 			if (err) return res.json({success: false, err})
-			if(post.publish){
+		
 				res.status(200).json({ success: true, post });
-			}else{
-			res.json({ success: false, message:"Youre nit allowed here" });
-			}
+		
 		})
 	})
 

@@ -2,18 +2,44 @@ import "./blog.css"
 import React, { Component } from "react";
  import {
   BrowserRouter as Router,
-  Switch,
-  Route,
   Link
 } from "react-router-dom";
+import { connect } from "react-redux";
+
 
 import Admin from "./Admin"
 import Detail from "./Detail"
 import Signin from "./Signin" 
 import Formfield from "./utils/Formfield"
+import { viewPost } from "../store/actions/adminActions"
 
 class Blog extends Component {
+	state = {
+		isLoading: true,
+		page: " hhhjj"
+	}
+
+	componentDidMount() {
+    this.props.dispatch(viewPost())
+		.then(response => {
+		
+   
+	   this.setState({ isLoading: false
+		   });
+
+    });
+  }
   render() {
+	  let posts = this.props.isBlog.post ? 
+		  this.props.isBlog.post.map( recent =>{
+		<div>	
+				  recent.title
+	</div>		  
+		  })
+: (                      <div className="loading">                         loader
+	
+                  </div>
+          )
     return (
 	    <div>
 	    <div className="main">
@@ -27,7 +53,8 @@ class Blog extends Component {
 	    </div>
 	    <div className="content">
 	    latest news from arsenal fc
-	    </div>
+	    </div>loading state: {this.state.isLoading}%{this.state.page}
+	    {posts}
 	    </div>
 	
 	    </div>
@@ -37,4 +64,10 @@ class Blog extends Component {
   }
 }
 
-export default Blog
+const mapStateToProps = state => {
+  return {
+    isBlog: state.admin
+  };
+};
+
+export default connect(mapStateToProps)(Blog)
