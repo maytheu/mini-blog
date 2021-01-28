@@ -26,7 +26,7 @@ module.exports = (app) => {
     });
   });
 
-  //query for individual poat
+  //accept query params of title
   app.get("/api/post", (req, res) => {
     let title = req.query.title;
     Blog.findOne({ title, publish: true }, (err, post) => {

@@ -2,9 +2,7 @@ import axios from 'axios'
 import {
   ADMIN_LOGIN,
   ADMIN_AUTH,
-  ADMIN_LOGOUT,
-	VIEW_POST
-} from "./types"
+  ADMIN_LOGOUT} from "./types"
 import { SERVER } from "../../component/utils/url"
 
 export function loginAdmin(data) {
@@ -40,12 +38,3 @@ export function logoutAdmin() {
   };
 }
 
-export function viewPost() {
-  const request = axios.get(`${SERVER}view`)
-    .then(response => response.data);
-
-  return {
-    type: VIEW_POST,
-    payload: request
-  };
-}

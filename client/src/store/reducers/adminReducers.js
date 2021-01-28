@@ -1,8 +1,7 @@
 import {
   ADMIN_LOGIN,
   ADMIN_AUTH,
-  ADMIN_LOGOUT,
-	VIEW_POST
+  ADMIN_LOGOUT
 } from "../actions/types"
 
 export default function(state = {}, action) {
@@ -13,8 +12,6 @@ export default function(state = {}, action) {
       return { ...state };
     case ADMIN_LOGOUT:
       return { ...state };
-	  case VIEW_POST:
-		  return { ...state, post: action.payload}
 	  default:
 		  return state
   }

@@ -1,73 +1,52 @@
-import "./blog.css"
+import "./blog.css";
 import React, { Component } from "react";
- import {
-  BrowserRouter as Router,
-  Link
-} from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-
-import Admin from "./Admin"
-import Detail from "./Detail"
-import Signin from "./Signin" 
-import Formfield from "./utils/Formfield"
-import { viewPost } from "../store/actions/adminActions"
+import { viewPost } from "../store/actions/blogActions";
 
 class Blog extends Component {
-	state = {
-		isLoading: true,
-		page: " hhhjj"
-	}
+  state = {
+    isLoading: true,
+  };
 
-	componentDidMount() {
-    this.props.dispatch(viewPost())
-		.then(response => {
-		
-   
-	   this.setState({ isLoading: false
-		   });
-
+  componentDidMount() {
+    this.props.dispatch(viewPost()).then((response) => {
+      this.setState({ isLoading: false });
     });
   }
   render() {
-	  let posts = this.props.isBlog.post ? 
-		  this.props.isBlog.post.map( recent =>{
-		<div>	
-				  recent.title
-	</div>		  
-		  })
-: (                      <div className="loading">                         loader
-	
-                  </div>
-          )
+    let posts = !this.state.isLoading ? (
+      this.props.isBlog.post.map((recent) => {
+        return (
+          <div key={recent._id}>
+            <div className="title">
+              <Link to={`/detail/${recent.title}`}>{recent.title}</Link>
+            </div>
+            <div className="content">{recent.headline}</div>
+          </div>
+        );
+      })
+    ) : (
+      <div className="loading"></div>
+    );
     return (
-	    <div>
-	    <div className="main">
-	    <div className="flex-center flex-column">
-	    <h1>Welcome to my Blog</h1>
-	    <div className="post">
-	    <div className="title">
-	    <Router>
-	    <Link to="/detail">Title</Link>
-	    </Router>
-	    </div>
-	    <div className="content">
-	    latest news from arsenal fc
-	    </div>loading state: {this.state.isLoading}%{this.state.page}
-	    {posts}
-	    </div>
-	
-	    </div>
-	    </div>
-	    </div>
-    )
+      <div>
+        <div className="main">
+          <div className="flex-center flex-column">
+            <h1>Welcome to my Blog</h1>
+            <div className="post">{posts}</div>
+          </div>
+        </div>
+      </div>
+    );
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    isBlog: state.admin
+    isBlog: state.blog
   };
 };
 
-export default connect(mapStateToProps)(Blog)
+export default connect(mapStateToProps)(Blog);
