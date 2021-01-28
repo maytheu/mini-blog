@@ -1,1 +1,1 @@
-A blog using react and nidejs
+A blog using react and nodejs
