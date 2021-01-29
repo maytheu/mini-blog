@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const blogSchema = mongoose.Schema({
   title: {
     type: String,
@@ -15,6 +16,18 @@ const blogSchema = mongoose.Schema({
     default: 0,
     required: true,
   },
+  publishedDate: Date,
+  like: {
+    type: Number,
+    default: 0,
+  },
+  dislike: {
+    type: Number,
+    default: 0,
+  },
+  commentName: String,
+  comment: String,
+  commentDate: Date,
 });
 
 mongoose.model("blogs", blogSchema);

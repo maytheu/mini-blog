@@ -1,9 +1,17 @@
 const mongoose = require("mongoose");
+
 const userAuth = require("../middleware/userAuth.js");
 const Blog = mongoose.model("blogs");
+
 module.exports = (app) => {
-  app.get("/api/user/post", userAuth, (req, res) => {
-    const post = new Blog();
+  app.post("/api/user/post", userAuth, (req, res) => {
+    const post = new Blog({
+      title: req.body.title,
+      headline: req.body.headline,
+      publish: req.body.publish,
+      blog: req.body.blog,
+      publishedDate: req.body.publishedDate,
+    });
     post.save((err, doc) => {
       if (err) return res.json({ success: false, err });
       res.status(200).json({ success: true });
@@ -54,5 +62,45 @@ module.exports = (app) => {
       if (err) return res.json({ success: false, err });
       return res.status(200).send({ success: true, post });
     });
+  });
+
+  app.post("/api/post_comment", (req, res) => {
+    let title = req.query.title;
+    const comment = new Blog({
+      comment: req.body.comment,
+      commentName: req.body.commentName,
+      commentDate: req.body.commentDate,
+    });
+    Blog.findOneAndUpdate({ title }, (err, doc) => {
+      if (err) return res.json({ success: false, err });
+      comment.save((err, doc) => {
+        if (err) return res.json({ success: false, err });
+        res.status(200).json({ success: true });
+      });
+    });
+  });
+
+  app.get('/api/share', (req, res) =>{
+//returns shareable url
+  })
+
+  app.get("/api/like", (req, res) => {
+    let title = req.query.title;
+    Blog.findOneAndUpdate({ title }, { $inc: { like: 1 } }).exec(
+      (err, likes) => {
+        if (err) return res.json({ success: false, err });
+        res.status(200).json({ success: true, likes });
+      }
+    );
+  });
+
+  app.get("/api/dislike", (req, res) => {
+    let title = req.query.title;
+    Blog.findOneAndUpdate({ title }, { $inc: { dislike: 1 } }).exec(
+      (err, dislikes) => {
+        if (err) return res.json({ success: false, err });
+        res.status(200).json({ success: true, dislikes });
+      }
+    );
   });
 };

@@ -5,9 +5,8 @@ class Error extends Component {
   render() {
     return (
             <div className="main">
-            <div className="flex-center flex-colum
-n">
-            404
+            <div className="flex-center flex-column">
+            Page Not Found
             </div>
             </div>
     )

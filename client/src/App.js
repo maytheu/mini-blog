@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Admin from "./component/Admin";
 import Detail from "./component/Detail";
-import Signin from "./component/Signin";
 import Blog from "./component/Blog";
 import Error from "./component/Error";
+import Login from "./component/Login";
 
 class App extends Component {
   render() {
@@ -14,7 +14,7 @@ class App extends Component {
         <div className="main">
           <Switch>
             <Route exact path="/" component={Blog} />
-            <Route exact path="/signin" component={Signin} />
+            <Route exact path="/signin" component={Login} />
             <Route exact path="/detail/:title" component={Detail} />
             <Route exact path="/admin" component={Admin} />
             <Route component={Error} />

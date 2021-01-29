@@ -62,8 +62,15 @@ main > * {
   align-items: center;
 }
 
+.share {
+
+margin: 0 auto;
+padding: 0.5rem;
+}
 .justify-center {
   justify-content: center;
+  display: flex;
+  width: 50%;
 }
 
 .text-center {

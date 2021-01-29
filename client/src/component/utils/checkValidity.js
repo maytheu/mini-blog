@@ -9,4 +9,5 @@ export const checkValidity= (values, rules) => {
   if (rules.minLength) {
     isValid = values.length >= rules.minLength && isValid;
   }
+  return isValid
 }

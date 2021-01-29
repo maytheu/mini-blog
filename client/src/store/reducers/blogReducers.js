@@ -1,4 +1,4 @@
-import { DETAILED_POST, VIEW_POST } from "../actions/types";
+import { DETAILED_POST, DISLIKE, LIKE, VIEW_POST } from "../actions/types";
 
 export default function (state = {}, action) {
   switch (action.type) {
@@ -6,6 +6,10 @@ export default function (state = {}, action) {
       return { ...state, post: action.payload };
     case DETAILED_POST:
       return { ...state, post: action.payload };
+    case LIKE:
+      return { ...state };
+    case DISLIKE:
+      return { ...state };
     default:
       return state;
   }
