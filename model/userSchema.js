@@ -5,6 +5,7 @@ const SALT_I = 10;
 require("dotenv").config();
 const crypto = require("crypto");
 const userSchema = mongoose.Schema({
+  
   user: { type: String, unique: 1, required: true },
   password: {
     type: String,

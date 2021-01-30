@@ -21,8 +21,8 @@ module.exports = (app) => {
   //display all post for admin
   app.get("/api/user/view", userAuth, (req, res) => {
     Blog.find({}, (err, post) => {
-      if (err) return res.json({ success: false, err });
-      res.status(200).json({ success: true, post });
+      if (err) return res.status(400).send(err);
+      res.status(200).send(post);
     });
   });
 
@@ -35,9 +35,18 @@ module.exports = (app) => {
   });
 
   //accept query params of title
+  app.get("/api/user/post", userAuth, (req, res) => {
+    let title = req.query.title;
+    Blog.findOne({ title }, (err, post) => {
+      if (err) return res.json({ success: false, err });
+      res.status(200).json({ success: true, post });
+    });
+  });
+
+  //accept query params of title
   app.get("/api/post", (req, res) => {
     let title = req.query.title;
-    Blog.findOne({ title, publish: true }, (err, post) => {
+    Blog.findOne({ title }, (err, post) => {
       if (err) return res.json({ success: false, err });
       res.status(200).json({ success: true, post });
     });
@@ -57,10 +66,10 @@ module.exports = (app) => {
   });
 
   app.get("/api/user/delete", userAuth, (req, res) => {
-    let title = req.query.title;
-    Blog.deleteOne({ title }, (err, post) => {
+    let id = req.query.id;
+    Blog.deleteOne({ _id: id }, (err, post) => {
       if (err) return res.json({ success: false, err });
-      return res.status(200).send({ success: true, post });
+      return res.status(200);
     });
   });
 
@@ -80,9 +89,9 @@ module.exports = (app) => {
     });
   });
 
-  app.get('/api/share', (req, res) =>{
-//returns shareable url
-  })
+  app.get("/api/share", (req, res) => {
+    //returns shareable url
+  });
 
   app.get("/api/like", (req, res) => {
     let title = req.query.title;

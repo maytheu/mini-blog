@@ -2,13 +2,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const cors = require('cors')
 
 require("dotenv").config();
 
 const app = express();
-
-app.use(cors())
 
 require("./model/userSchema.js");
 require("./model/blogSchema.js");
@@ -23,7 +20,19 @@ console.log(mongoose.connection.readyState);
 
 app.use(cookieParser());
 
-app.use(bodyParser.urlencoded({ extended: false }));
+//enable post request
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+//enable post request
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 require("./route/user.js")(app);
 require("./route/blog.js")(app);

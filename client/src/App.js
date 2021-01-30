@@ -6,6 +6,7 @@ import Detail from "./component/Detail";
 import Blog from "./component/Blog";
 import Error from "./component/Error";
 import Login from "./component/Login";
+import CheckLogin from "./component/CheckLogin";
 
 class App extends Component {
   render() {
@@ -13,10 +14,20 @@ class App extends Component {
       <BrowserRouter>
         <div className="main">
           <Switch>
-            <Route exact path="/" component={Blog} />
-            <Route exact path="/signin" component={Login} />
-            <Route exact path="/detail/:title" component={Detail} />
-            <Route exact path="/admin" component={Admin} />
+            <Route exact path="/" component={CheckLogin(Blog, false)} />
+            <Route exact path="/signin" component={CheckLogin(Login, false)} />
+            <Route exact path="/:admin" component={CheckLogin(Blog, true)} />
+            <Route
+              exact
+              path="/detail/:title"
+              component={CheckLogin(Detail, false)}
+            />
+            <Route exact path="/admin" component={CheckLogin(Admin, true)} />
+            <Route
+              exact
+              path="/admin/:page"
+              component={CheckLogin(Admin, true)}
+            />
             <Route component={Error} />
           </Switch>
         </div>

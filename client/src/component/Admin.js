@@ -47,8 +47,8 @@ class Admin extends Component {
   };
 
   componentDidMount(){
-	  if(this.props.match.params.title !== undefined){
-	  let page = this.props.match.params.title
+	  if(this.props.match.params.page !== undefined){
+	  let page = this.props.match.params.page
 	  this.setState({page: `Edit ${page}`})
 	  }
   }
@@ -57,8 +57,7 @@ class Admin extends Component {
     return (
       <div className="main">
         <div
-          className="flex-center flex-colum
-n"
+          className="flex-center flex-column"
         >
           <h2>{this.state.page}</h2>
           <div>
@@ -94,5 +93,12 @@ n"
     );
   }
 }
+ 
+const mapStateToProps = (state) => {
+  return {
+    isBlog: state.blog,
+    isAdmin: state.admin,
+  };
+};
 
-export default connect()(Admin);
+export default connect(mapStateToProps)(Admin);

@@ -9,7 +9,7 @@ const Formfield = (props) => {
         type={props.type}
         name={props.name}
         placeholder={props.placeholder}
-        onChange={props.change}
+        onChange={(event) => props.change({ event, id: props.id })}
       />
     </div>
   );

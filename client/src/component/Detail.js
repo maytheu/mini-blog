@@ -2,8 +2,12 @@ import "./blog.css";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { detailedPost, dislike, like } from "../store/actions/blogActions";
-import { authAdmin } from "../store/actions/adminActions";
+import {
+  deletePost,
+  detailedPost,
+  dislike,
+  like,
+} from "../store/actions/blogActions";
 
 class Detail extends Component {
   state = {
@@ -11,22 +15,34 @@ class Detail extends Component {
     isAdmin: false,
   };
   componentDidMount() {
+    console.log(this.props.isAdmin);
+    if (this.props.isAdmin.user.isUser) {
+      console.log("run");
+    }
     this.props
       .dispatch(detailedPost(this.props.match.params.title))
       .then((response) => {
         this.setState({ isLoading: false });
       });
-    this.props
-      .dispatch(authAdmin())
-      .then((response) => this.setState({ isAdmin: response.payload.isAuth }));
   }
 
   dislikeHandler = () => {
     this.props.dispatch(dislike(this.props.match.params.title));
   };
 
-  likeHandler = (action) => {
+  likeHandler = () => {
     this.props.dispatch(like(this.props.match.params.title));
+  };
+
+  editHandler = () => {
+    this.props.history.push(`/admin/${this.props.isBlog.post.post._id}`);
+  };
+
+  deleteHandler = () => {
+    console.log("delete");
+    this.props.dispatch(deletePost(this.props.isBlog.post.post._id));
+    console.log("delete2");
+    this.props.history.push("/user");
   };
 
   render() {
@@ -38,6 +54,8 @@ class Detail extends Component {
         <div>{this.props.isBlog.post.post.blog}</div>
       </div>
     );
+    let user = this.props.isAdmin.user.isUser;
+    console.log(user);
     let likes = !this.state.isLoading ? (
       <div>
         <div className="main">
@@ -51,10 +69,15 @@ class Detail extends Component {
             <div className="share" onClick={this.dislikeHandler}>
               Share
             </div>
-            {this.state.isAdmin ? (
+            {user ? (
               <div>
-                <div className="share">add edit</div>
-                <div className="share"> delete fir user</div>
+                <div className="share" onClick={this.editHandler}>
+                  add edit
+                </div>
+                <div className="share" onClick={this.deleteHandler}>
+                  {" "}
+                  delete fir user
+                </div>
               </div>
             ) : (
               ""
@@ -63,7 +86,9 @@ class Detail extends Component {
         </div>
         <div className="main">Comment</div>
       </div>
-    ): ''
+    ) : (
+      ""
+    );
     return (
       <div>
         <div className="main">
@@ -78,6 +103,7 @@ class Detail extends Component {
 const mapStateToProps = (state) => {
   return {
     isBlog: state.blog,
+    isAdmin: state.admin,
   };
 };
 

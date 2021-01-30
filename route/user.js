@@ -5,19 +5,22 @@ const Author = mongoose.model("authors");
 
 module.exports = (app) => {
   app.post("/api/sign_up", (req, res) => {
-    const author = new Author();
+    const author = new Author({
+      user: req.body.user,
+      password: req.body.password,
+    });
     author.save((err, doc) => {
       if (err) return res.json({ success: false, err });
       res.status(200).json({ success: true });
     });
   });
 
-  app.get("/api/sign_in", (req, res) => {
-    Author.findOne({ user: req.body.email }, (err, user) => {
+  app.post("/api/sign_in", (req, res) => {
+    Author.findOne({ user: req.body.user }, (err, user) => {
       if (!user)
         return res.json({ loginSuccess: false, message: "User not found" });
 
-      user.comparePassword(eq.body.password, (err, isMatch) => {
+      user.comparePassword(req.body.password, (err, isMatch) => {
         if (!isMatch)
           return res.json({
             loginSuccess: false,
@@ -35,12 +38,12 @@ module.exports = (app) => {
     });
   });
 
-  app.get('/api/auth', userAuth, (req, res) => {
+  app.get("/api/auth", userAuth, (req, res) => {
     res.status(200).json({
       isUser: true,
-      username: req.user.user
-    })
-  })
+      username: req.user.user,
+    });
+  });
 
   app.get("/api/sign_out", userAuth, (req, res) => {
     Author.findOneAndUpdate(

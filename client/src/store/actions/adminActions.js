@@ -1,40 +1,33 @@
-import axios from 'axios'
-import {
-  ADMIN_LOGIN,
-  ADMIN_AUTH,
-  ADMIN_LOGOUT} from "./types"
-import { SERVER } from "../../component/utils/url"
+import axios from "axios";
+import { ADMIN_LOGIN, ADMIN_AUTH, ADMIN_LOGOUT } from "./types";
+import { SERVER } from "../../component/utils/url";
 
 export function loginAdmin(data) {
   const request = axios
     .post(`${SERVER}sign_in`, data)
-    .then(response => response.data);
-
+    .then((response) => response.data);
   return {
     type: ADMIN_LOGIN,
-    payload: request
+    payload: request,
   };
 }
 
 export function authAdmin() {
-  const request = axios
-    .get(`${SERVER}auth`)
-    .then(response => response.data);
+  const request = axios.get(`${SERVER}auth`).then((response) => response.data);
 
   return {
     type: ADMIN_AUTH,
-    payload: request
+    payload: request,
   };
 }
 
 export function logoutAdmin() {
   const request = axios
     .get(`${SERVER}sign_out`)
-    .then(response => response.data);
+    .then((response) => response.data);
 
   return {
     type: ADMIN_LOGOUT,
-    payload: request
+    payload: request,
   };
 }
-
