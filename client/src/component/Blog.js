@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 
 import { viewAdminPost, viewPost } from "../store/actions/blogActions";
 import { logoutAdmin } from "../store/actions/adminActions";
+import Footer from "./utils/Footer";
 
 class Blog extends Component {
   state = {
@@ -35,10 +36,13 @@ class Blog extends Component {
 
   render() {
     let signOut = this.props.match.params.admin ? (
-      <div onClick={() => this.props.history.push("/admin")}>
-        Add New Post
-        <div onClick={this.signOutHandler}>Sign Out</div>
-      </div>
+      <div onClick={this.signOutHandler}>Sign Out</div>
+    ) : (
+      ""
+    );
+
+    let newPost = this.props.match.params.admin ? (
+      <div onClick={() => this.props.history.push("/admin")}>Add New Post</div>
     ) : (
       ""
     );
@@ -81,7 +85,12 @@ class Blog extends Component {
             <div className="post">{posts}</div>
           </div>
         </div>
-        {signOut}
+        {/* {signOut} */}
+        <div className="footer">
+          <diiv>{newPost}</diiv>
+          <div>Footer component</div>
+          <div>{signOut}</div>
+        </div>
       </div>
     );
   }

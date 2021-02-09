@@ -1,11 +1,9 @@
 import "./blog.css";
-import "react-share-button/dist/ShareBtn" 
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import DOMPurify from "dompurify";
 import { EditorState } from "draft-js";
 import { convertToHTML } from "draft-convert";
-import ShareBtn from 'react-share-button';
 
 import {
   deleteComment,
@@ -79,13 +77,8 @@ class Detail extends Component {
     this.props.dispatch(deleteComment(this.props.location.state.id, id));
   };
 
-//   shareButton = () =>{
-//     <ShareBtn 
-//   url={this.props.isBlog.post.url}
-//   text={text}
-//   className='ib'
-//   displayText='Share'
-// />
+// shareButton = () =>{
+
   // }
 
   createHTMLMarkup = (html) => {
@@ -279,13 +272,6 @@ class Detail extends Component {
         {likes}
         <div className="flex-center flex-column">{viewComment}</div>
         {newComment}
-        <ShareBtn 
-  url={this.props.isBlog.post.url}
-  text={text}
-  className='ib'
-  displayText='Share'
-/>
-
       </div>
     );
   }

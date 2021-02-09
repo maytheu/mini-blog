@@ -8,7 +8,7 @@ import axios from "axios";
 import Formfield from "./utils/Formfield";
 import { checkValidity } from "./utils/checkValidity";
 import Wysiwyg from "./Wysiwyg";
-import { editPost, post, upload } from "../store/actions/blogActions";
+import { editPost, post } from "../store/actions/blogActions";
 import { SERVER } from "./utils/url";
 
 class Admin extends Component {
@@ -18,7 +18,8 @@ class Admin extends Component {
     page: "Add New Post",
     isLoading: false,
     url: "",
-    imageUpload: null,
+    imageUpload: "",
+    progress: 0,
     data: {
       title: {
         type: "text",
@@ -113,13 +114,9 @@ class Admin extends Component {
   };
 
   uploadFile = (event) => {
-    // const files = {...this.state.upload.image}
-    // // const images[event] = {...files}
-    // files = event.target.files[0]
-    // // files = images
     console.log("files");
-    console.log(event.target.files[0]);
     this.setState({ imageUpload: event.target.files[0] });
+    console.log(this.state.imageUpload);
   };
 
   submitForm = (event, id) => {
@@ -171,28 +168,33 @@ class Admin extends Component {
     }
   };
 
+  progressEvent = () => {
+    this.setState((ProgressEvent) => {
+      return {
+        progress:
+          Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100) + "%",
+      };
+    });
+  };
+
   submitImage = (event) => {
     event.preventDefault();
-    const target = event.target;
-    const data = new FormData(target);
-    for (var [key, value] of data.entries()) {
-      console.log(value);
-    }
-    const config = {
-      header: { "content-type": "multipart/form-data" },
-    };
+    const data = new FormData();
     data.append("file", this.state.imageUpload);
-    console.log(data)
-    // data.append("file", this.state.imageUpload, this.state.imageUpload.name);
-    //  this.props.dispatch(upload(value)).then((response) => console.log(response));
-    axios.post(`${SERVER}user/upload`, data, config).then((response) => {
-      console.log(response);
-    });
+    console.log(data);
+
+    axios
+      .post(`${SERVER}user/upload`, data, {
+        onUploadProgress: this.progressEvent(),
+      })
+      .then((response) => {
+        this.setState({ url: response.data.url });
+      });
   };
 
   render() {
     const state = this.state.data;
-    console.log({ state });
+    console.log(this.state.editorState);
     console.log(this.state.convertedContent);
     return (
       <div className="main">
@@ -228,15 +230,25 @@ class Admin extends Component {
                 editorState={this.state.editorState}
                 setEditorState={this.changeSetEditorState}
               />
-              <button
-                className="btn"
-                type="submit"
-                onClick={(event, id) =>
-                  this.submitForm(event, this.props.isBlog.post.post._id)
-                }
-              >
-                Post Article
-              </button>
+              {this.state.page === "Add New Post" ? (
+                <button
+                  className="btn"
+                  type="submit"
+                  onClick={(event, id) => this.submitForm(event)}
+                >
+                  Post Article
+                </button>
+              ) : (
+                <button
+                  className="btn"
+                  type="submit"
+                  onClick={(event, id) =>
+                    this.submitForm(event, this.props.isBlog.post.post._id)
+                  }
+                >
+                  Edit Article
+                </button>
+              )}
             </form>
             <form onSubmit={(event) => this.submitImage(event)}>
               <input type="file" name="file" onChange={this.uploadFile} />

@@ -31,9 +31,13 @@ class App extends Component {
 
             <Route component={Error} />
           </Switch>
+          {/* <div className="footer">
+            footer
+          </div> */}
         </div>
       </BrowserRouter>
     );
   }
 }
+
 export default App;

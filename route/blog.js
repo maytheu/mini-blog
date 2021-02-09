@@ -20,6 +20,19 @@ let storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single("file");
 
 module.exports = (app) => {
+  app.post("/api/user/upload", userAuth, (req, res) => {
+    let urlPath = path.join(__dirname, "../client/public")
+    if (!req.files)
+      return res.status(500).json({ success: false, err: "File not found" });
+    const uploadFile = req.files.file;
+    uploadFile.mv(`${urlPath}/${uploadFile.name}`, (err) => {
+      if (err) return res.status(500).json({ success: false, err });
+      return res
+        .status(200)
+        .json({ success: true, url: `${urlPath}/${uploadFile.name}` });
+    });
+  });
+  
   app.post("/api/user/post", userAuth, (req, res) => {
     const post = new Blog({
       title: req.body.title,
@@ -73,16 +86,16 @@ module.exports = (app) => {
     );
   });
 
-  app.post("/api/user/upload", userAuth, (req, res) => {
-    upload(req, res, (err) => {
-      if (!req.file) return res.json({ success: false, err });
-      const dir = path.resolve(__dirname + "/../client/public/uploads/");
-      fs.readdir(dir, (err, items) => {
-        console.log(items);
-        return res.status(200).send(items);
-      });
-    });
-  });
+  // app.post("/api/user/upload", userAuth, (req, res) => {
+  //   upload(req, res, (err) => {
+  //     if (!req.file) return res.json({ success: false, err });
+  //     const dir = path.resolve(__dirname + "/../client/public/uploads/");
+  //     fs.readdir(dir, (err, items) => {
+  //       console.log(items);
+  //       return res.status(200).send(items);
+  //     });
+  //   });
+  // });
 
   app.get("/api/user/delete", userAuth, (req, res) => {
     let id = req.query.id;
