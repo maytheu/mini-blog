@@ -3,10 +3,14 @@ import axios from "axios";
 import { SERVER } from "../../component/utils/url";
 import {
   DELETE_POST,
+  POST,
   DETAILED_POST,
   DISLIKE,
   LIKE,
   VIEW_POST,
+  EDIT_POST,
+  POST_COMMENT,
+  DELETE_COMMENT,
 } from "./types";
 
 export function viewPost() {
@@ -29,9 +33,21 @@ export function viewAdminPost() {
   };
 }
 
-export function detailedPost(title) {
+export function deleteComment(_id, id) {
   const request = axios
-    .get(`${SERVER}post?title=${title}`)
+    .get(`${SERVER}user/comment_delete/?id=${id}&_id=${_id}`)
+    .then((response) => response.data);
+
+  return {
+    type: DELETE_COMMENT,
+    payload: request,
+  };
+}
+
+
+export function detailedPost(id) {
+  const request = axios
+    .get(`${SERVER}post?id=${id}`)
     .then((response) => response.data);
 
   return {
@@ -41,8 +57,7 @@ export function detailedPost(title) {
 }
 
 export function deletePost(id) {
-  const request = axios
-    .get(`${SERVER}user/delete?id=${id}`)
+  const request = axios.get(`${SERVER}user/delete?id=${id}`);
 
   return {
     type: DELETE_POST,
@@ -71,3 +86,34 @@ export function dislike(title) {
     payload: request,
   };
 }
+
+export function post(data) {
+  const request = axios
+    .post(`${SERVER}user/post`, data)
+    .then((response) => response.data);
+
+  return { type: POST, payload: request };
+}
+
+export function editPost(data, id) {
+  const request = axios
+    .post(`${SERVER}user/edit?id=${id}`, data)
+    .then((response) => response.data);
+
+  return {
+    type: EDIT_POST,
+    payload: request,
+  };
+}
+
+export function postComment(id, data) {
+  const request = axios
+    .post(`${SERVER}post_comment?id=${id}`, data)
+    .then((response) => response.data);
+
+  return {
+    type: POST_COMMENT,
+    payload: request,
+  };
+}
+

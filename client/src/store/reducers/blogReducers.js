@@ -1,22 +1,35 @@
 import {
+  DELETE_COMMENT,
   DELETE_POST,
   DETAILED_POST,
   DISLIKE,
+  EDIT_POST,
   LIKE,
-  VIEW_ADMIN_POST,
+  POST,
+  POST_COMMENT,
   VIEW_POST,
 } from "../actions/types";
 
-export default function (state = {}, action) {
+const initialization = {
+  post: {},
+};
+
+export default function (state = initialization, action) {
   switch (action.type) {
     case VIEW_POST:
-      return { ...state, post: action.payload };
-    case VIEW_ADMIN_POST:
       return { ...state, post: action.payload };
     case DETAILED_POST:
       return { ...state, post: action.payload };
     case DELETE_POST:
       return { ...state, post: action.payload };
+    case POST:
+      return { ...state };
+    case DELETE_COMMENT:
+      return { ...state, comment: action.payload };
+    case EDIT_POST:
+      return { ...state, post: action.payload };
+    case POST_COMMENT:
+      return { ...state, comment: action.payload };
     case LIKE:
       return { ...state };
     case DISLIKE:

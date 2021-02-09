@@ -9,3 +9,6 @@ export const DELETE_POST = "delete_post";
 export const LIKE = "like";
 export const DISLIKE = "dislike";
 export const POST_COMMENT = "post_comment";
+export const POST = "post";
+export const EDIT_POST = "edit_post";
+export const DELETE_COMMENT = "delete_comment";

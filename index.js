@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const cloudinary = require('cloudinary').v2
 
 require("dotenv").config();
 
@@ -14,6 +15,8 @@ mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
+//mongoose.set('debug', true)
 
 //check mongoose connection
 console.log(mongoose.connection.readyState);
@@ -32,6 +35,12 @@ app.use((req, res, next) => {
     "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
+});
+
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+  api_key: process.env.CLOUDINARY_CLOUD_KEY, 
+  api_secret: process.env.CLOUDINARY_CLOUD_SECRET 
 });
 
 require("./route/user.js")(app);

@@ -25,9 +25,14 @@ const blogSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  commentName: String,
-  comment: String,
-  commentDate: Date,
+  comment: {
+    type: Array,
+    default: [],
+  },
+  commentCount: {
+    type: Number,
+    default: 0,
+  },
 });
 
 mongoose.model("blogs", blogSchema);

@@ -1,7 +1,23 @@
 const mongoose = require("mongoose");
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
+const SHA1 = require("crypto-js/sha1");
 
 const userAuth = require("../middleware/userAuth.js");
 const Blog = mongoose.model("blogs");
+
+// STORAGE MULTER CONFIG
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage: storage }).single("file");
 
 module.exports = (app) => {
   app.post("/api/user/post", userAuth, (req, res) => {
@@ -34,28 +50,20 @@ module.exports = (app) => {
     });
   });
 
-  //accept query params of title
-  app.get("/api/user/post", userAuth, (req, res) => {
-    let title = req.query.title;
-    Blog.findOne({ title }, (err, post) => {
-      if (err) return res.json({ success: false, err });
-      res.status(200).json({ success: true, post });
-    });
-  });
-
-  //accept query params of title
+  //accept query params of title..3
   app.get("/api/post", (req, res) => {
-    let title = req.query.title;
-    Blog.findOne({ title }, (err, post) => {
+    let id = req.query.id;
+    const url = req.headers.referer;
+    Blog.findOne({ _id: id }, (err, post) => {
       if (err) return res.json({ success: false, err });
-      res.status(200).json({ success: true, post });
+      res.status(200).json({ success: true, post, url });
     });
   });
 
   app.post("/api/user/edit", userAuth, (req, res) => {
-    let title = req.query.title;
+    let id = req.query.id;
     Blog.findOneAndUpdate(
-      { title },
+      { _id: id },
       { $set: req.body },
       { new: true },
       (err, post) => {
@@ -63,6 +71,17 @@ module.exports = (app) => {
         return res.status(200).send({ success: true, post });
       }
     );
+  });
+
+  app.post("/api/user/upload", userAuth, (req, res) => {
+    upload(req, res, (err) => {
+      if (!req.file) return res.json({ success: false, err });
+      const dir = path.resolve(__dirname + "/../client/public/uploads/");
+      fs.readdir(dir, (err, items) => {
+        console.log(items);
+        return res.status(200).send(items);
+      });
+    });
   });
 
   app.get("/api/user/delete", userAuth, (req, res) => {
@@ -74,23 +93,41 @@ module.exports = (app) => {
   });
 
   app.post("/api/post_comment", (req, res) => {
-    let title = req.query.title;
-    const comment = new Blog({
+    let id = req.query.id;
+    const date = new Date();
+    const commentId = `comment-${SHA1(req.body.commentDate)
+      .toString()
+      .substring(0, 5)}${date.getSeconds()}${date.getMilliseconds()}`;
+    const comment = [];
+    comment.push({
       comment: req.body.comment,
       commentName: req.body.commentName,
       commentDate: req.body.commentDate,
+      commentId,
     });
-    Blog.findOneAndUpdate({ title }, (err, doc) => {
-      if (err) return res.json({ success: false, err });
-      comment.save((err, doc) => {
+    Blog.findOneAndUpdate(
+      { _id: id },
+      { $push: { comment }, $inc: { commentCount: 1 } },
+      { new: true },
+      (err, doc) => {
         if (err) return res.json({ success: false, err });
-        res.status(200).json({ success: true });
-      });
-    });
+        res.status(200).json({ success: true, doc });
+      }
+    );
   });
 
-  app.get("/api/share", (req, res) => {
-    //returns shareable url
+  //the admin will delete post with /api/user/comment_delete/id/?commentDate
+  app.get("/api/user/comment_delete", userAuth, (req, res) => {
+    let _id = req.query.id;
+    let id = req.query.id;
+    Blog.update(
+      {},
+      { $pull: { comment: { commentId: id } }, $inc: { commentCount: -1 } },
+      { multi: true }
+    ).exec((err, doc) => {
+      if (err) return res.json({ success: false, err });
+      res.status(200).json({ success: true, doc });
+    });
   });
 
   app.get("/api/like", (req, res) => {

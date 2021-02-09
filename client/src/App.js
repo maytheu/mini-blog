@@ -16,7 +16,6 @@ class App extends Component {
           <Switch>
             <Route exact path="/" component={CheckLogin(Blog, false)} />
             <Route exact path="/signin" component={CheckLogin(Login, false)} />
-            <Route exact path="/:admin" component={CheckLogin(Blog, true)} />
             <Route
               exact
               path="/detail/:title"
@@ -28,6 +27,8 @@ class App extends Component {
               path="/admin/:page"
               component={CheckLogin(Admin, true)}
             />
+            <Route exact path="/:admin" component={CheckLogin(Blog, true)} />
+
             <Route component={Error} />
           </Switch>
         </div>
