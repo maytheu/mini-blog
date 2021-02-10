@@ -4,6 +4,16 @@ import { connect } from "react-redux";
 import DOMPurify from "dompurify";
 import { EditorState } from "draft-js";
 import { convertToHTML } from "draft-convert";
+import {
+  FacebookIcon,
+  FacebookShareButton,
+  LinkedinIcon,
+  LinkedinShareButton,
+  TwitterIcon,
+  TwitterShareButton,
+  WhatsappIcon,
+  WhatsappShareButton,
+} from "react-share";
 
 import {
   deleteComment,
@@ -77,7 +87,7 @@ class Detail extends Component {
     this.props.dispatch(deleteComment(this.props.location.state.id, id));
   };
 
-// shareButton = () =>{
+  // shareButton = () =>{
 
   // }
 
@@ -161,7 +171,6 @@ class Detail extends Component {
         />
       </div>
     );
-    //let date = new Date(1612226214425);
 
     let viewComment =
       this.props.location.state.comment.length > 0
@@ -204,9 +213,29 @@ class Detail extends Component {
               {this.props.isBlog.post.post.dislike}DisLike
             </div>
             <div className="share" onClick={this.shareButton}>
-              Share
+              <FacebookShareButton
+                url={this.props.isBlog.post.url}
+                quote={this.props.location.state.title}
+              >
+                <FacebookIcon size={18} round={true} />
+              </FacebookShareButton>
+              <TwitterShareButton url={this.props.isBlog.post.url}>
+                <TwitterIcon size={18} round={true} />
+              </TwitterShareButton>
+              <LinkedinShareButton
+                url={this.props.isBlog.post.url}
+                title={this.props.location.state.title}
+              >
+                <LinkedinIcon size={18} round={true} />
+              </LinkedinShareButton>
+              <WhatsappShareButton
+                url={this.props.isBlog.post.url}
+                title={this.props.location.state.title}
+              >
+                <WhatsappIcon round={true} size={18} />
+              </WhatsappShareButton>
             </div>
-            {user ? ( 
+            {user ? (
               <div>
                 <div className="share" onClick={this.editHandler}>
                   add edit
@@ -265,7 +294,6 @@ class Detail extends Component {
 
     return (
       <div>
-        {/* {console.log(this.props.isBlog.post.post.comment.length)} */}
         <div className="main">
           <div className="flex-center flex-column">{post}</div>
         </div>

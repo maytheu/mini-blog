@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 
 import { viewAdminPost, viewPost } from "../store/actions/blogActions";
 import { logoutAdmin } from "../store/actions/adminActions";
-import Footer from "./utils/Footer";
 
 class Blog extends Component {
   state = {
@@ -87,9 +86,13 @@ class Blog extends Component {
         </div>
         {/* {signOut} */}
         <div className="footer">
-          <diiv>{newPost}</diiv>
-          <div>Footer component</div>
-          <div>{signOut}</div>
+          <div className="btn_footer">{newPost}</div>
+          <div>Footer 
+            Terms of use |
+            Privacy 
+            <div>&copy; 2021</div>
+          </div>
+          <div className='btn_footer'>{signOut}</div>
         </div>
       </div>
     );
